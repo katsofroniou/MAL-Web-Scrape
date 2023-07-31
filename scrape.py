@@ -17,15 +17,19 @@ def pageScrape(end, page, path):
 
 
 def scrapeJikan(database):
+
+    # create file if not exists
     path = f'data/raw/{database}'
     if not os.path.exists(path):
         os.makedirs(path)
 
+    # Finds last page + calculates length
     last_page = requests.get(f'{URL}/{database}').json()['pagination']['last_visible_page']
     length = len(str(last_page))
 
     start = datetime.datetime.now()
 
+    # Scrapes for each page
     for page in tqdm.trange(1, last_page + 1):
         start = time.perf_counter()
         pageScrape(f'/{database}', page, f'{path}/page{str(page).zfill(length)}.json')
